@@ -1,0 +1,60 @@
+name: BuffCore CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  NUGET_FEED_URL: https://nuget.pkg.github.com/YOUR_GITHUB_ORG/index.json
+
+jobs:
+  build-test-pack:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore BuffCore.sln
+
+      - name: Build
+        run: dotnet build BuffCore.sln --no-restore -c Release
+
+      - name: Test
+        run: dotnet test BuffCore.sln --no-build -c Release
+
+      - name: Pack
+        run: dotnet pack src/BuffCore.Abstractions/BuffCore.Abstractions.csproj -c Release -o artifacts --no-build
+
+      - name: Publish to GitHub Packages
+        # Publish only on develop/main pushes once the feed org is configured; keep CI green before that.
+        if: github.event_name == 'push' && vars.NUGET_PUBLISH_ENABLED == 'true'
+        run: |
+          dotnet nuget add source "github" \
+            --url "$NUGET_FEED_URL" \
+            --username "YOUR_GITHUB_USERNAME" \
+            --password "$GITHUB_TOKEN" \
+            --store-password-in-clear-text
+          dotnet nuget push "artifacts/*.nupkg" \
+            --source "github" \
+            --api-key "$GITHUB_TOKEN" \
+            --skip-duplicate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkg
+          path: artifacts/*.nupkg
