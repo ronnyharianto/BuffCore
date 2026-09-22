@@ -35,7 +35,9 @@ jobs:
         run: dotnet test BuffCore.sln --no-build -c Release
 
       - name: Pack
-        run: dotnet pack src/BuffCore.Abstractions/BuffCore.Abstractions.csproj -c Release -o artifacts --no-build
+        run: |
+          dotnet pack src/BuffCore.Abstractions/BuffCore.Abstractions.csproj -c Release -o artifacts --no-build
+          dotnet pack src/BuffCore.Utilities/BuffCore.Utilities.csproj -c Release -o artifacts --no-build
 
       - name: Publish to GitHub Packages
         # Publish only on develop/main pushes once the feed org is configured; keep CI green before that.
