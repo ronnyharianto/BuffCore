@@ -11,8 +11,8 @@ namespace BuffCore.Utilities
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Registers BuffCore.Utilities services: <see cref="JsonHelper"/> (singleton)
-        /// and <see cref="HttpClientHelper"/> (typed HTTP client).
+        /// Registers BuffCore.Utilities services: <see cref="JsonHelper"/>, <see cref="EmailHelper"/>,
+        /// and <see cref="RsaHelper"/> (singletons) plus <see cref="HttpClientHelper"/> (typed HTTP client).
         /// </summary>
         /// <param name="services">Service collection to register services into.</param>
         /// <param name="httpClientConfig">Optional typed-client settings; defaults apply when null.</param>
@@ -22,6 +22,10 @@ namespace BuffCore.Utilities
             var config = httpClientConfig ?? new HttpClientConfig();
 
             services.TryAddSingleton(sp => new JsonHelper(sp.GetService<ILoggerFactory>()?.CreateLogger<JsonHelper>()));
+
+            services.TryAddSingleton(sp => new EmailHelper(sp.GetService<ILoggerFactory>()?.CreateLogger<EmailHelper>()));
+
+            services.TryAddSingleton(sp => new RsaHelper(sp.GetService<ILoggerFactory>()?.CreateLogger<RsaHelper>()));
 
             services.AddHttpClient<HttpClientHelper>(client =>
             {
