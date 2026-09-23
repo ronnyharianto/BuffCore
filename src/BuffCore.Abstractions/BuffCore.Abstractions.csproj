@@ -9,7 +9,7 @@
 
     <!-- Packaging metadata -->
     <PackageId>BuffCore.Abstractions</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>BuffCore Contributors</Authors>
     <Product>BuffCore</Product>
     <Description>Standard API response and request contracts for .NET services: response DTO envelopes (Base/Object/Struct/Paging), paging and search input bases, and a request-scoped current-user accessor.</Description>
@@ -20,9 +20,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Sole package dependency. Used by PagingDto.ApplyPagination (async queryable paging).
+    <!-- Used by PagingDto.ApplyPagination (async queryable paging).
          Roadmap: move queryable pagination into BuffCore.Data to drop this reference. -->
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
+    <!-- JsonIgnoreAttribute on BaseDto.CommitTransaction, so Newtonsoft-based hosts never
+         serialize the server-side transaction flag. -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
   <ItemGroup>

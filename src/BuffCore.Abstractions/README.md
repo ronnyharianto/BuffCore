@@ -35,9 +35,7 @@ public async Task<PagingDto<CustomerDto>> Search(PagingSearchInputBase input, Ca
 
 ## Serialization
 
-Annotated for **System.Text.Json** (no third-party serializer dependency): `BaseDto.CommitTransaction` is marked `[JsonIgnore]` — it is a server-side transaction-control flag and never part of the API contract.
-
-> Note for Newtonsoft.Json consumers: Newtonsoft ignores System.Text.Json attributes, so `CommitTransaction` would be emitted. If your host serializes with Newtonsoft, exclude the property via a custom `DefaultContractResolver`.
+`BaseDto.CommitTransaction` is marked `[JsonIgnore]` (Newtonsoft.Json) — it is a server-side transaction-control flag and never part of the API contract. BuffCore standardizes on Json.NET for all JSON serialization.
 
 ## Build and test
 

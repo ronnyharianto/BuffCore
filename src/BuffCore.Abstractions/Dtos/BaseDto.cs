@@ -1,5 +1,5 @@
 using System.Net;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace BuffCore.Abstractions.Dtos
 {
@@ -51,6 +51,10 @@ namespace BuffCore.Abstractions.Dtos
         /// When true, commit the surrounding transaction even if the HTTP status code is not successful.
         /// This is intended for mutation endpoints that still need database writes on failure.
         /// </summary>
+        /// <remarks>
+        /// Marked <see cref="JsonIgnoreAttribute"/> so the flag stays server-side and is never
+        /// part of the serialized API contract.
+        /// </remarks>
         [JsonIgnore]
         public bool CommitTransaction { get; set; }
 

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace BuffCore.Utilities.Tests
@@ -16,6 +17,18 @@ namespace BuffCore.Utilities.Tests
         {
             public string Name { get; set; } = "root";
             public Circular? Next { get; set; }
+        }
+
+        private sealed class RenamedPayload
+        {
+            [JsonProperty("client_id")]
+            public string ClientId { get; set; } = string.Empty;
+        }
+
+        private sealed class DatePayload
+        {
+            public DateOnly Start { get; set; }
+            public DateOnly? End { get; set; }
         }
 
         [Fact]
@@ -59,6 +72,30 @@ namespace BuffCore.Utilities.Tests
             var json = helper.SerializeObject(node);
 
             Assert.Contains("\"Name\":\"root\"", json);
+        }
+
+        [Fact]
+        public void SerializeObject_HonorsJsonPropertyNames()
+        {
+            var helper = new JsonHelper();
+
+            var json = helper.SerializeObject(new RenamedPayload { ClientId = "abc" });
+
+            Assert.Contains("\"client_id\":\"abc\"", json);
+        }
+
+        [Fact]
+        public void DateOnly_RoundTripsAsIso8601()
+        {
+            var helper = new JsonHelper();
+
+            var json = helper.SerializeObject(new DatePayload { Start = new DateOnly(2026, 9, 23) });
+
+            Assert.Contains("\"Start\":\"2026-09-23\"", json);
+
+            var payload = helper.DeserializeObject<DatePayload>("{\"Start\":\"2026-09-23\"}");
+
+            Assert.Equal(new DateOnly(2026, 9, 23), payload!.Start);
         }
 
         [Fact]

@@ -17,6 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- The serialization tests exercise Json.NET directly. -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\BuffCore.Abstractions\BuffCore.Abstractions.csproj" />
   </ItemGroup>
 

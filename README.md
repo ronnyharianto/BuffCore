@@ -36,7 +36,7 @@ public async Task<PagingDto<ProjectDto>> Paging(PagingSearchInputBase input, Can
 }
 ```
 
-Serialization is annotated for **System.Text.Json**; `BaseDto.CommitTransaction` is `[JsonIgnore]` — a server-side transaction-control flag, not part of the API contract. Newtonsoft hosts should exclude it via a custom `DefaultContractResolver` (see package README).
+Serialization is standardized on **Newtonsoft.Json (Json.NET)**: `BaseDto.CommitTransaction` is `[JsonIgnore]`-annotated — a server-side transaction-control flag, never part of the API contract. Hosts using other serializers should exclude it via their own mechanism.
 
 ## Development
 

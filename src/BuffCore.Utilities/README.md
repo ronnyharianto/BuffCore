@@ -1,6 +1,6 @@
 # BuffCore.Utilities
 
-General-purpose utilities for .NET services. Pure BCL building blocks with no framework or serialization dependencies — safe to reference from any layer.
+General-purpose utilities for .NET services. Pure BCL building blocks with no framework dependencies — safe to reference from any layer.
 
 ## Contents
 
@@ -17,7 +17,7 @@ General-purpose utilities for .NET services. Pure BCL building blocks with no fr
 - **EmailHelper** — injectable SMTP sender with configurable host/port/SSL and per-call credentials; returns `false` on failure instead of throwing
 - **EmailMessage / EmailAddress** (`BuffCore.Utilities.Objects`) — credentials-free email model; the password lives only in `SmtpConfig`
 - **SmtpConfig** (`BuffCore.Utilities.Configurations`) — SMTP server settings (host, port, SSL, user name, password)
-- **JsonHelper** — injectable STJ serializer (PascalCase output, case-insensitive read, null-omitting, cycle-safe); deserialization failures are logged and return `default` instead of throwing
+- **JsonHelper** — injectable Json.NET (Newtonsoft) serializer (PascalCase output, case-insensitive read, null-omitting, cycle-safe); deserialization failures are logged and return `default` instead of throwing
 - **HttpClientHelper** — injectable typed HTTP client for JSON POST/GET and form-URL-encoded POST flows, with optional Basic/Bearer auth
 - **HttpClientConfig** (`BuffCore.Utilities.Configurations`) — timeout and handler-lifetime settings for the typed client
 - **`AddBuffCoreUtilities()`** — DI registration for the above
@@ -67,7 +67,7 @@ public class MyClient(HttpClientHelper http)
 }
 ```
 
-`JsonHelper` serializes with property names as declared (PascalCase) and reads case-insensitively; it omits nulls, handles cycles, and logs deserialization failures at Warning when a logger is available.
+`JsonHelper` serializes with property names as declared (PascalCase) and reads case-insensitively; it omits nulls, handles cycles, and logs deserialization failures at Warning when a logger is available. It runs on Newtonsoft.Json (Json.NET), so `[JsonProperty]`, custom `JsonConverter`s, and contract resolvers apply; `DateOnly`/`TimeOnly` serialize to ISO 8601 (`"2026-05-12"`) natively on Json.NET 13.0.4+.
 
 ### Email usage
 
@@ -132,11 +132,12 @@ Hosts whose conventions prefer the Options pattern compose it host-side — bind
 ## Design decisions
 
 - **Parameter-based configuration over library-read configuration.** The composition root decides where settings come from (JSON, environment variables, Key Vault, code). This keeps the package source-agnostic and free of `Microsoft.Extensions.Configuration.*` dependencies, and keeps the configuration contract visible in host code instead of hidden inside a JSON file the library would have to locate itself.
-- **Instance `JsonHelper` rather than a static class.** The optional `ILogger` is instance state, which enables the lenient log-and-return-`default` contract and lets consumers mock the helper. `JsonSerializerOptions` are still cached in static fields and the DI registration is a singleton, so there is no per-use cost relative to a static API.
+- **Instance `JsonHelper` rather than a static class.** The optional `ILogger` is instance state, which enables the lenient log-and-return-`default` contract and lets consumers mock the helper. `JsonSerializerSettings` are still cached in static fields and the DI registration is a singleton, so there is no per-use cost relative to a static API.
 - **When to revisit.** If a second configurable helper lands in this package, or BuffCore.Data / BuffCore.Web.Server standardize on the Options pattern, evaluate `IOptions<HttpClientConfig>` for the registration while keeping the parameter overload through a deprecation window. Not planned at 0.1.0.
 - **Credentials stay out of message objects.** `EmailMessage` describes only the letter; `SmtpConfig` carries the server settings and password. This mirrors the JSON/HTTP contract above — the composition root owns secrets — and avoids the earlier pattern where a shared email DTO carried the account password through every layer.
 - **Lenient failure contract for sends.** `EmailHelper` and `RsaHelper` log failures and return a sentinel (`false` / `string.Empty`) rather than throwing, matching `JsonHelper`'s lenient deserialization contract. Callers who need hard failures can check the return value.
+- **Json.NET over System.Text.Json for the shared engine.** The consuming product standardized on Newtonsoft (MVC input/output, Npgsql jsonb payload serialization, and the `JsonHelper` engine must agree on one serializer). Case-insensitive reads come for free; PascalCase output is explicit; `DateOnly`/`TimeOnly` need Json.NET 13.0.4+.
 
 ## Dependencies
 
-BCL plus `Microsoft.Extensions.Logging.Abstractions`, `Microsoft.Extensions.DependencyInjection.Abstractions`, and `Microsoft.Extensions.Http` (for the typed-client registration). No serialization package — System.Text.Json ships with the runtime; SMTP and RSA support ship with the BCL (`System.Net.Mail`, `System.Security.Cryptography`).
+BCL plus `Newtonsoft.Json` (the serialization engine for `JsonHelper`), `Microsoft.Extensions.Logging.Abstractions`, `Microsoft.Extensions.DependencyInjection.Abstractions`, and `Microsoft.Extensions.Http` (for the typed-client registration). SMTP and RSA support ship with the BCL (`System.Net.Mail`, `System.Security.Cryptography`).

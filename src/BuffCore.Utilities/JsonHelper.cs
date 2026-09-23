@@ -1,11 +1,10 @@
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace BuffCore.Utilities
 {
     /// <summary>
-    /// JSON serialization and deserialization using System.Text.Json with centralized configuration
+    /// JSON serialization and deserialization using Newtonsoft.Json (Json.NET) with centralized configuration
     /// for consistent behavior across services.
     /// </summary>
     /// <remarks>
@@ -25,17 +24,18 @@ namespace BuffCore.Utilities
     {
         private readonly ILogger? _logger = logger;
 
-        private static readonly JsonSerializerOptions _options = new()
+        private static readonly JsonSerializerSettings _options = new()
         {
-            ReferenceHandler = ReferenceHandler.IgnoreCycles, // Prevents infinite loops when serializing objects with circular references.
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull, // Omits properties with null values from the JSON output to reduce size.
-            WriteIndented = false, // Produces a compact JSON format; use the indented overload for human readability.
-            PropertyNameCaseInsensitive = true, // Accepts payloads regardless of property-name casing (e.g. camelCase responses feeding PascalCase DTOs).
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore, // Prevents infinite loops when serializing objects with circular references.
+            NullValueHandling = NullValueHandling.Ignore, // Omits properties with null values from the JSON output to reduce size.
+            Formatting = Formatting.None, // Produces a compact JSON format; use the indented overload for human readability.
+            // Newtonsoft matches property names case-insensitively during deserialization by default
+            // (e.g. camelCase responses feeding PascalCase DTOs), so no extra setting is required.
         };
 
-        private static readonly JsonSerializerOptions _indentedOptions = new(_options)
+        private static readonly JsonSerializerSettings _indentedOptions = new(_options)
         {
-            WriteIndented = true,
+            Formatting = Formatting.Indented,
         };
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace BuffCore.Utilities
         /// <param name="indented">If true, formats the JSON with indentation for readability.</param>
         /// <returns>A JSON string representation of the object.</returns>
         public string SerializeObject(object? data, bool indented = false)
-            => JsonSerializer.Serialize(data, indented ? _indentedOptions : _options);
+            => JsonConvert.SerializeObject(data, indented ? _indentedOptions : _options);
 
         /// <summary>
         /// Deserializes a JSON string into an object of the specified type using the configured options.
@@ -57,7 +57,7 @@ namespace BuffCore.Utilities
         {
             try
             {
-                return JsonSerializer.Deserialize<T>(jsonString, _options);
+                return JsonConvert.DeserializeObject<T>(jsonString, _options);
             }
             catch (JsonException ex)
             {

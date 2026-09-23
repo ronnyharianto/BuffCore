@@ -9,7 +9,7 @@
 
     <!-- Packaging metadata -->
     <PackageId>BuffCore.Utilities</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Authors>BuffCore Contributors</Authors>
     <Product>BuffCore</Product>
     <Description>General-purpose utilities for .NET services: enum description/mapping helpers, date-range calculations, SHA256/RSA helpers, a configurable SMTP email helper, and injectable JSON/HTTP helpers (JsonHelper, HttpClientHelper) with DI registration.</Description>
@@ -29,6 +29,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.5" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.5" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.5" />
+    <!-- JSON serialization engine for JsonHelper (and HttpClientHelper indirectly). -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
   <ItemGroup>
