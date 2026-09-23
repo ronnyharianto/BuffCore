@@ -70,7 +70,10 @@ namespace BuffCore.Utilities
                 using var mail = ToMailMessage(message);
                 await smtp.SendMailAsync(mail, cancellationToken);
 
-                _logger?.LogInformation("Email sent to {Recipients} via {Host}:{Port}.", CountRecipients(message), config.Host, config.Port);
+                if (_logger?.IsEnabled(LogLevel.Information) == true)
+                {
+                    _logger.LogInformation("Email sent to {Recipients} via {Host}:{Port}.", CountRecipients(message), config.Host, config.Port);
+                }
                 return true;
             }
             catch (Exception ex)

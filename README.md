@@ -7,7 +7,8 @@ BuffCore is a set of small, reusable .NET foundation libraries for building HTTP
 | Package | Status | Contents |
 | --- | --- | --- |
 | **BuffCore.Abstractions** | Available (0.1.0) | Response envelopes (`BaseDto`, `ObjectDto<T>`, `StructDto<T>`, `PagingDto<T>`), supporting DTOs, paging/search input bases, `CurrentUserAccessor`. |
-| **BuffCore.Utilities** | Available (0.1.0) | Enum description/mapping helpers (`EnumHelper`, `MapFromAttribute<T>`), date-range calculations (`DateRangeHelper`), injectable JSON + HTTP helpers (`JsonHelper`, `HttpClientHelper`, `AddBuffCoreUtilities`). |
+| **BuffCore.Utilities** | Available (0.2.0) | Enum description/mapping helpers (`EnumHelper`, `MapFromAttribute<T>`), date-range calculations (`DateRangeHelper`), SHA256/RSA helpers (`HashHelper`, `RsaHelper`), configurable SMTP email (`EmailHelper`), injectable JSON + HTTP helpers (`JsonHelper`, `HttpClientHelper`, `AddBuffCoreUtilities`). |
+| **BuffCore.Data** | Available (0.1.0) | EF Core conventions: `EntityBase` with audit fields and soft delete, `EntityBaseBuilder` query-filter convention, `AuditDbContext` with audit stamping and schema mapping, `AddBuffCoreData` provider-neutral registration, and `MigrateDatabaseAsync` startup migration. |
 
 ## Planned packages
 
@@ -15,7 +16,7 @@ The library family grows in small, independently shippable steps:
 
 1. ✅ **Abstractions** — response/input contracts
 2. ✅ **Utilities** — general-purpose BCL helpers (enums, dates, and more over time)
-3. **BuffCore.Data** — base entity, entity builder, and DbContext conventions for EF Core (also absorbs `PagingDto.ApplyPagination` so Abstractions can drop its EF dependency)
+3. ✅ **BuffCore.Data** — base entity, entity builder, audit-stamping DbContext conventions, and startup migration for EF Core (remaining: absorb `PagingDto.ApplyPagination` so Abstractions can drop its EF dependency)
 3. **BuffCore.Web.Server** — base controller, transaction filter, and JWT/Swagger/CORS setup extensions for ASP.NET Core
 4. **BuffCore.Web.UI** — Razor Class Library with shared JavaScript helpers
 

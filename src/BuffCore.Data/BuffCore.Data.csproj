@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <!-- Packaging metadata -->
+    <PackageId>BuffCore.Data</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>BuffCore Contributors</Authors>
+    <Product>BuffCore</Product>
+    <Description>EF Core conventions for .NET services: EntityBase with audit fields and soft-delete status, EntityBaseBuilder query-filter convention, AuditDbContext with automatic audit stamping and attribute-driven schema mapping, DatabaseSchemaAttribute, a provider-neutral AddBuffCoreData registration, and a startup migration helper (MigrateDatabaseAsync).</Description>
+    <PackageTags>buffcore;data;efcore;entity-framework;audit;soft-delete;schema;helpers</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeSymbols>false</IncludeSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- For the request-scoped CurrentUserAccessor consumed by AuditDbContext. -->
+    <ProjectReference Include="..\BuffCore.Abstractions\BuffCore.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>

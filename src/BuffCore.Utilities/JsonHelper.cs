@@ -61,7 +61,11 @@ namespace BuffCore.Utilities
             }
             catch (JsonException ex)
             {
-                _logger?.LogWarning(ex, "Failed to deserialize JSON to {Type}. Returning default value.", typeof(T).Name);
+                if (_logger?.IsEnabled(LogLevel.Warning) == true)
+                {
+                    _logger.LogWarning(ex, "Failed to deserialize JSON to {Type}. Returning default value.", typeof(T).Name);
+                }
+
                 return default;
             }
         }
