@@ -40,6 +40,7 @@ jobs:
           dotnet pack src/BuffCore.Utilities/BuffCore.Utilities.csproj -c Release -o artifacts --no-build
           dotnet pack src/BuffCore.Data/BuffCore.Data.csproj -c Release -o artifacts --no-build
           dotnet pack src/BuffCore.Integrations/BuffCore.Integrations.csproj -c Release -o artifacts --no-build
+          dotnet pack src/BuffCore.Web.Server/BuffCore.Web.Server.csproj -c Release -o artifacts --no-build
 
       - name: Publish to GitHub Packages
         # Publish only on develop/main pushes once the feed org is configured; keep CI green before that.

@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <!-- Packaging metadata -->
+    <PackageId>BuffCore.Web.Server</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>BuffCore Contributors</Authors>
+    <Product>BuffCore</Product>
+    <Description>ASP.NET Core server conventions for .NET APIs: versioned BaseController, commit/rollback TransactionFilter&lt;TDbContext&gt;, JWT-claims to CurrentUserAccessor mapping, and WebApplicationBuilder extensions for controllers, Swagger, CORS, and JWT bearer authentication.</Description>
+    <PackageTags>buffcore;web;aspnetcore;api;basecontroller;transaction-filter;jwt;swagger;cors</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeSymbols>false</IncludeSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- ASP.NET Core shared framework: Controller, filters, WebApplicationBuilder, JWT bearer. -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- BaseDto and CurrentUserAccessor consumed by the filter and the claims mapper. -->
+    <ProjectReference Include="..\BuffCore.Abstractions\BuffCore.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- AddNewtonsoftJson input/output formatters for AddBuffCoreControllers.
+         Swashbuckle: SwaggerGen, Bearer security scheme, and EnableAnnotations for AddBuffCoreSwaggerGen.
+         JwtBearerDefaults/TokenValidationParameters for AddBuffCoreJwtBearer.
+         Log.Logger used by the startup extensions, mirroring other BuffCore hosts. -->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.6" />
+    <PackageReference Include="Serilog" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>

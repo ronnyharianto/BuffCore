@@ -10,6 +10,7 @@ BuffCore is a set of small, reusable .NET foundation libraries for building HTTP
 | **BuffCore.Utilities** | Available (0.2.0) | Enum description/mapping helpers (`EnumHelper`, `MapFromAttribute<T>`), date-range calculations (`DateRangeHelper`), SHA256/RSA helpers (`HashHelper`, `RsaHelper`), configurable SMTP email (`EmailHelper`), injectable JSON + HTTP helpers (`JsonHelper`, `HttpClientHelper`, `AddBuffCoreUtilities`). |
 | **BuffCore.Data** | Available (0.1.0) | EF Core conventions: `EntityBase` with audit fields and soft delete, `EntityBaseBuilder` query-filter convention, `AuditDbContext` with audit stamping and schema mapping, `AddBuffCoreData` provider-neutral registration, and `MigrateDatabaseAsync` startup migration. |
 | **BuffCore.Integrations** | Available (0.1.0) | Injectable cloud integrations: Google Cloud Storage (`GoogleCloudStorageHelper`) and Firebase Cloud Messaging (`FirebaseMessagingHelper`), with host-owned configuration (`StorageConfig`, `MessagingConfig`, `GoogleServiceAccount`) and `AddBuffCoreIntegrations` registration. |
+| **BuffCore.Web.Server** | Available (0.1.0) | ASP.NET Core server conventions: versioned `BaseController`, commit/rollback `TransactionFilter<TDbContext>`, JWT-claims to `CurrentUserAccessor` mapping (`CurrentClaimsMapper`), and `WebApplicationBuilder` extensions for controllers, Swagger, CORS, and JWT bearer authentication. |
 
 ## Planned packages
 
@@ -19,7 +20,7 @@ The library family grows in small, independently shippable steps:
 2. ✅ **Utilities** — general-purpose BCL helpers (enums, dates, and more over time)
 3. ✅ **BuffCore.Data** — base entity, entity builder, audit-stamping DbContext conventions, and startup migration for EF Core (remaining: absorb `PagingDto.ApplyPagination` so Abstractions can drop its EF dependency)
 4. ✅ **BuffCore.Integrations** — injectable Google Cloud Storage and Firebase Cloud Messaging helpers
-5. **BuffCore.Web.Server** — base controller, transaction filter, and JWT/Swagger/CORS setup extensions for ASP.NET Core
+5. ✅ **BuffCore.Web.Server** — base controller, transaction filter, claims mapper, and controller/Swagger/CORS/JWT setup extensions for ASP.NET Core
 4. **BuffCore.Web.UI** — Razor Class Library with shared JavaScript helpers
 
 ## Usage
