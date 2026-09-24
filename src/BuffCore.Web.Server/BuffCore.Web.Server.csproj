@@ -27,6 +27,8 @@
   <ItemGroup>
     <!-- BaseDto and CurrentUserAccessor consumed by the filter and the claims mapper. -->
     <ProjectReference Include="..\BuffCore.Abstractions\BuffCore.Abstractions.csproj" />
+    <!-- HashHelper.ComputeSha256 for API-key hash validation in PermissionAuthorizationFilter. -->
+    <ProjectReference Include="..\BuffCore.Utilities\BuffCore.Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>

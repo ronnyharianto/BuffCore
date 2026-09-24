@@ -52,6 +52,29 @@ var accessor = CurrentClaimsMapper.Map(httpContext.User, new CurrentClaimsOption
 });
 ```
 
+## PermissionAuthorizationFilter
+
+A global authorization filter that enforces `PermissionAuthorizeAttribute` permission checks against JWT claims and authenticates API-key callers (via `PermissionAuthorizeApiKeyAttribute`) through a host-supplied storage delegate. Hosts keep their own client table; the filter handles header parsing, enabled/expiry/hash validation, the 401/500 envelopes, and `CurrentUserAccessor` population:
+
+```csharp
+services.AddPermissionAuthorizationFilter(
+    findApiClientFactory: sp =>
+    {
+        var db = sp.GetRequiredService<ApplicationDbContext>();
+        return clientId => db.ApiClients
+            .Where(c => c.ClientId == clientId)
+            .Select(c => new ApiPrincipal { /* map storage fields */ })
+            .FirstOrDefault();
+    },
+    clientAuthenticatedFactory: sp =>
+    {
+        var db = sp.GetRequiredService<ApplicationDbContext>();
+        return principal => { /* stamp LastUsedAt, etc. */ };
+    });
+```
+
+The API key is validated as an ordinal match between the stored hash and the uppercase SHA-256 hex of the `X-API-KEY` header (`BuffCore.Utilities.HashHelper.ComputeSha256`). Claim-name conventions can be overridden via `CurrentClaimsOptions`.
+
 ## Startup extensions
 
 ```csharp
